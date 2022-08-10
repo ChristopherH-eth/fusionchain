@@ -19,6 +19,7 @@ public class TransactionOutput {
 
     /**
      * @notice The isMine() function verifies the recipient address.
+     * @param publicKey The recipient's public key.
      */
 
     public boolean isMine(PublicKey publicKey) {
