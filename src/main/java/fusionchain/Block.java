@@ -48,8 +48,8 @@ public class Block {
         String target = new String(new char[difficulty]).replace('\0', '0');
 
         while(!blockHash.substring(0, difficulty).equals(target)) {
-            blockHash = calculateHash();
             nonce ++;
+            blockHash = calculateHash();
         }
 
         System.out.println("Block Mined: " + blockHash);
