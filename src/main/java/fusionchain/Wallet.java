@@ -95,4 +95,12 @@ public class Wallet {
         return newTranaction;
     }
 
+    public String getPublicKey() {
+        return StringUtil.getStringFromKey((this).publicKey);
+    }
+
+    public String getPrivateKey() {
+        return StringUtil.getStringFromKey((this).privateKey);
+    }
+
 }

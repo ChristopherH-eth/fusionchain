@@ -1,6 +1,7 @@
 .prettierrc
 /target/
 pom.xml
+Notes.txt
 
 # dependencies
 /node_modules

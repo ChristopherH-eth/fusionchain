@@ -12,8 +12,10 @@ public class Block {
     public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
     public String blockHash;
+    public static String _blockHash;
     public String previousBlockHash;
     public String merkleRoot;
+    public static boolean blockMined = false;
     public long timeStamp;
     public int nonce;
 
@@ -52,6 +54,9 @@ public class Block {
             blockHash = calculateHash();
         }
 
+        setLastBlock();
+        setBlockMined();
+
         System.out.println("Block Mined: " + blockHash);
     }
 
@@ -73,6 +78,29 @@ public class Block {
         System.out.println("Transaction added to block successfully.");
 
         return true;
+    }
+
+    public String setLastBlock() {
+        _blockHash = blockHash;
+        return _blockHash;
+    }
+
+    public static String getLastBlock() {
+        return _blockHash;
+    }
+
+    public static boolean setBlockMined() {
+        blockMined = true;
+        return blockMined;
+    }
+
+    public static boolean getBlockMined() {
+        return blockMined;
+    }
+
+    public static boolean resetMinedFlag() {
+        blockMined = false;
+        return blockMined;
     }
     
 }

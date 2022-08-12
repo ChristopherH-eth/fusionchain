@@ -22,7 +22,7 @@ public class FusionChain {
     public static Wallet walletB;
     public static Transaction genesisTransaction;
 
-    public static void main(String[] args) {
+    public static void fusionChain() {
 
         // Security provider for public and private key generation algorithm
         Security.addProvider(new BouncyCastleProvider());
