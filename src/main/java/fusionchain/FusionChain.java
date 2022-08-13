@@ -21,6 +21,7 @@ public class FusionChain {
     public static Wallet walletA;
     public static Wallet walletB;
     public static Transaction genesisTransaction;
+    public static boolean connectedToBlockchain;
 
     public static void fusionChain() {
 
@@ -30,6 +31,7 @@ public class FusionChain {
         walletA = new Wallet();
         walletB = new Wallet();
         Wallet coinbase = new Wallet();
+        connectedToBlockchain = true;
 
         // Create Genesis Transaction which adds 100 Fusion to walletA.
         genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
@@ -165,6 +167,16 @@ public class FusionChain {
     public static void addBlock(Block newBlock) {
         newBlock.mineBlock(difficulty);
         blockchain.add(newBlock);
+    }
+
+    /* Getters and Setters */
+
+    public static void setConnectedToBlockchain() {
+        Node.connectedToBlockchain = connectedToBlockchain;
+    }
+
+    public static boolean getConnectedToBlockchain() {
+        return connectedToBlockchain;
     }
 
 }

@@ -11,11 +11,13 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class Node extends JFrame implements ActionListener {
 
-    JLabel text, text2, blockText, clicked, publicKeyText, privateKeyText;
-    JButton button, clickButton;
+    private JLabel fusionWalletText, blockText, clicked, publicKeyText, privateKeyText;
+    private JButton button, clickButton;
     private JPanel containerPanel, mainPanel, iconPanel, keyPanel, dataPanel;
     private boolean _clickMeMode = true;
+    public static boolean connectedToBlockchain = true;
     public Wallet wallet;
+    public int count = 0;
 
     private JFrame fusionNode;
 
@@ -23,10 +25,14 @@ public class Node extends JFrame implements ActionListener {
         initialize();
     }
 
+    /**
+     * @notice The initialize() function initializes the wallet/node instance.
+     */
+
     public void initialize() {
         fusionNode = new JFrame();
-        text = new JLabel("FusionCore Wallet");
-        text2 = new JLabel("Other information here");
+
+        fusionWalletText = new JLabel("FusionCore Wallet");
         blockText = new JLabel("");
         clicked = new JLabel("Wallet Created!");
         publicKeyText = new JLabel("");
@@ -62,7 +68,7 @@ public class Node extends JFrame implements ActionListener {
         keyPanel.setLayout(new GridLayout(6,1,10,5));
         keyPanel.setBackground(Color.white);
         keyPanel.setPreferredSize(new Dimension(400,300));
-        keyPanel.add(text);
+        keyPanel.add(fusionWalletText);
         keyPanel.add(publicKeyText);
         keyPanel.add(privateKeyText);
 
@@ -71,7 +77,6 @@ public class Node extends JFrame implements ActionListener {
         dataPanel.setLayout(new BorderLayout(10,5));
         dataPanel.setBackground(Color.gray);
         dataPanel.setPreferredSize(new Dimension(575,200));
-        dataPanel.add(text2);
         dataPanel.add(blockText);
 
         // Add components to JFrame
@@ -81,19 +86,19 @@ public class Node extends JFrame implements ActionListener {
         mainPanel.add(keyPanel, BorderLayout.CENTER);
         mainPanel.add(dataPanel, BorderLayout.SOUTH);
 
-        // This code lets you close the window
+        // This listener allows the window to be closed
         WindowListener l = new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         };
         fusionNode.addWindowListener(l);
-        // This code lets you see the frame
         fusionNode.pack();
         fusionNode.setVisible(true);
         fusionNode.setResizable(false);
 
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+        // SwingWorker worker1 is the thread for the blockchain.
+        SwingWorker<Void, Void> worker1 = new SwingWorker<Void, Void>() {
             @Override
             public Void doInBackground() {
                 FusionChain.fusionChain();
@@ -101,11 +106,39 @@ public class Node extends JFrame implements ActionListener {
             }
         };
 
-        worker.execute();
+        // SwingWorker worker2 is used to update the GUI.
+        SwingWorker<Void, Void> worker2 = new SwingWorker<Void,Void>() {
+            @Override
+            public Void doInBackground() {
+
+                while(connectedToBlockchain) {
+                    FusionChain.getConnectedToBlockchain();
+
+                    if(!connectedToBlockchain) {
+                        break;
+                    }
+
+                    if(Block.getLastBlock() != null) {
+                        blockText.setText("Block mined. Last hash: " + Block.getLastBlock());
+                    } else {
+                        blockText.setText("Waiting for blocks...");
+                    }
+                }
+                
+                return null;
+            }
+        };
+
+        worker1.execute();
+        worker2.execute();
     }
 
+    /**
+     * @notice The actionPerformed() function listens for user events.
+     */
+
     public void actionPerformed(ActionEvent event) {
-        Object source = event.getSource();
+        // Object source = event.getSource();
 
         if(_clickMeMode) {
             wallet = new Wallet();
@@ -118,11 +151,6 @@ public class Node extends JFrame implements ActionListener {
             privateKeyText.setText("");
             button.setText("Generate Wallet Keys");
             _clickMeMode = true;
-        }
-
-        if(Block.getBlockMined()) {
-            blockText.setText("Block mined. Last hash: " + Block.getLastBlock());
-            Block.resetMinedFlag();
         }
     }
 

@@ -55,7 +55,6 @@ public class Block {
         }
 
         setLastBlock();
-        setBlockMined();
 
         System.out.println("Block Mined: " + blockHash);
     }
@@ -80,27 +79,14 @@ public class Block {
         return true;
     }
 
-    public String setLastBlock() {
+    /* Getters and Setters */
+    
+    public void setLastBlock() {
         _blockHash = blockHash;
-        return _blockHash;
     }
 
     public static String getLastBlock() {
         return _blockHash;
-    }
-
-    public static boolean setBlockMined() {
-        blockMined = true;
-        return blockMined;
-    }
-
-    public static boolean getBlockMined() {
-        return blockMined;
-    }
-
-    public static boolean resetMinedFlag() {
-        blockMined = false;
-        return blockMined;
     }
     
 }
